@@ -1,0 +1,10 @@
+extends layout
+
+block content
+	form( class="form-signin", role="form", action="/login", method="post")
+		h2.form-signin-heading Please log in
+		label(class="sr-only") Username
+		input.form-control(type="text", name="username" placeholder="Username", required, autofocus)
+		label.sr-only(for="inputPassword") Password
+		input.form-control(type="password", name="password", placeholder="Password", required)
+		input.btn.btn-lg.btn-primary.btn-block(type="submit", value="Login")

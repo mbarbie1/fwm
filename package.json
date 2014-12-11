@@ -1,0 +1,29 @@
+{
+  "name": "fwm",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "express": "*",
+    "body-parser": "*",
+    "cookie-parser": "*",
+    "morgan": "*",
+    "serve-favicon": "*",
+    "debug": "*",
+    "jade": "*",
+    "qs": "*",
+    "moment": "*",
+	"sqlite3": "*",
+	"express-session": "*",
+    "passport": "*",
+    "passport-local": "*",
+	"connect-flash": "*",
+	"method-override": "*",
+	"nodemailer": "*",
+	"nodemailer-smtp-transport": "*",
+	"xoauth2": "*",
+	"multer": "*"
+  }
+}

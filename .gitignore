@@ -1,0 +1,11 @@
+*.sqlite
+
+views/users/public/*
+
+node_modules/*
+
+appdata/*
+
+*.log
+
+*.swp

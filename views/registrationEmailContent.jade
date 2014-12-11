@@ -1,0 +1,16 @@
+block content
+
+	p
+		| You receive this email because someone (hopefully you) used this email-address to register for a FWM account (handling 3D fluorescent image stacks - IMI PREDECT project).
+		| If you didn't sign-up for this account please do one of the following:
+	ul
+		li Send an angry email to the administrator of the website sending you this kind of emails: michael.barbier (at) gmail (dot) com
+		li Ignore the email,
+		li Both of the above :-) 
+
+	p
+		| Otherwise: please click on the following link to confirm your submitted credentials whereafter you can use your credentials corresponding to email = #{pageData.email} 
+		| To verify that no malicious person tracking your internet-traffic can send you a false email please check the timestamp included on the confirmation dialog:
+		| bf timestamp = #{pageData.ref}
+
+	a(href="#{pageData.url}") #{pageData.url}

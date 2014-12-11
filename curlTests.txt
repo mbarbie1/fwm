@@ -1,0 +1,5 @@
+# Send an email 
+
+curl --verbose --data "email=mbarbie1@its.jnj.com&password=1&username=user" http://localhost:3000/registerByEmail
+
+curl --verbose http://localhost:3000/registerByEmail?email=mbarbie1@its.jnj.com&password=1&username=user
