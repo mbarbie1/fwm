@@ -1,5 +1,12 @@
 extends layout
 
-block content
-	script(src="../scripts/openSeaDragonViewer")
-	div#view(class="pixelated")
+block append styles
+	link(rel="stylesheet", href='external/jquery-ui-1.11.1/jquery-ui.css')
+
+block append content
+	div#view
+	script(type="text/javascript", src="../scripts/external/jquery/jquery-1.11.1.js")
+	script(type="text/javascript", src="../scripts/external/jquery-ui-1.11.1/jquery-ui.js")
+	script(type="text/javascript", src="../scripts/external/openseadragon/openseadragon-bin-1.1.1/openseadragon.min.js")
+	script(type="text/javascript", src="../scripts/external/openseadragonscalebar/openseadragon-scalebar.js")
+	script(type="text/javascript", src="../scripts/openSeaDragonViewer.js")

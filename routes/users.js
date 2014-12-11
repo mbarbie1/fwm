@@ -8,7 +8,7 @@ var router = express.Router();
 var util = require("util"); 
 var fs = require("fs"); 
 
-router.get('/users/app/:app/:username', function(req, res) {
+/* router.get('/users/app/:app/:username', function(req, res) {
 	console.log('Inside: user router');
 	pageContent = 'public/'+req.params.app+'.html';
 	console.log(pageContent);
@@ -24,7 +24,7 @@ router.get('/users/app/:app/:username', function(req, res) {
 			page: {'title':req.params.app, 'content':pageContent, 'htmlOrigin':'public'} 
 		});
 });
-
+ */
 /* GET users page */
 router.get('/users/home/:username', function(req, res) {
 	console.log('Inside: user router');

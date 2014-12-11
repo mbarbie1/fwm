@@ -1,29 +1,16 @@
-doctype html
-html
-	head
-		title= title
-		link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css')
-		link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css')
-		block scripts
-			script(type='text/javascript', src='https://code.jquery.com/jquery-2.1.1.min.js')
-			script(type='text/javascript', src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js')
-			each s in scripts
-				script(src=s)
-	body
-		nav.navbar.navbar-default(role="navigation")
-			.navbar-header
-				button.navbar-toggle(type="button",data-toggle="collapse",data-target="#main_site_nav")
-					span.sr-only Toggle navigation
-					span.icon-bar
-					span.icon-bar
-					span.icon-bar
-				a.navbar-brand(href="/users/home/#{user.username}") 
-					| #{user.username}
+nav.navbar.navbar-default(role="navigation")
 
-			.collapse.navbar-collapse#main_site_nav
-				ul.nav.navbar-nav
-					include layout_navBarUser
-					li.pull-right
-						a(href="/logout") Logout
-		.container
-			block content
+	.navbar-header
+		button.navbar-toggle(type="button",data-toggle="collapse",data-target="#main_site_nav")
+			span.sr-only Toggle navigation
+			span.icon-bar
+			span.icon-bar
+			span.icon-bar
+		a.navbar-brand(href="/users/home/#{user.username}") 
+			| #{user.username}
+
+	.collapse.navbar-collapse#main_site_nav
+		ul.nav.navbar-nav
+			include layout_navBarUser
+			li.pull-right
+				a(href="/logout") Logout

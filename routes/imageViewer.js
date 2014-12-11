@@ -1,14 +1,16 @@
 var express = require('express'); 
 var router = express.Router(); 
+var path = require('path'); 
 
 router.get('/:username', function(req, res) { 
-	res.render("users/imageViewer_node", {
-			scripts: [
-					'users/public/external/external/jquery/jquery-1.11.1.js',
-					'users/public/external/external/jquery-ui-1.11.1/jquery-ui.js',
-					'users/public/external/openseadragon/openseadragon-bin-1.1.1/openseadragon.min.js',
-					'users/public/external/openseadragonscalebar/openseadragon-scalebar.js'
+	res.render("users/imageViewer_node.jade", {
+/*  			scripts: [
+					'../scripts/external/jquery/jquery-1.11.1.js',
+					'../scripts/external/jquery-ui-1.11.1/jquery-ui.js',
+					'../scripts/external/openseadragon/openseadragon-bin-1.1.1/openseadragon.min.js',
+					'../scripts/external/openseadragonscalebar/openseadragon-scalebar.js'
 			],
+ */			nonavbar: true,
 			title: "Image Viewing",
 			user: {'username': req.params.username}
 	}); 

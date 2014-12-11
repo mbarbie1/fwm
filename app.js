@@ -50,13 +50,16 @@ app.use( multer( {
 	dest: "./users/public/data/"
 } ) );
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '/public')));
+app.use('/scripts',express.static(path.join(__dirname, '/public/scripts')));
+app.use('/styles',express.static(path.join(__dirname, '/public/styles')));
 app.use(session({ secret: 'timp' }));
 app.use(flash());
 
 //var host = server.address().address;
 var host = app.get('host');
 var port = app.get('port');
+
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -85,9 +88,11 @@ var port = app.get('port');
 	var auth = require('./config/passport')(app, database.db);
 	auth.initPassport();
 
+	
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////          VIEWS          //////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 	var nonUsers = require('./routes/index2')(app, auth.passport, auth.hashPassword, database.db, email.sendByGmail);
 	var uploads = require('./routes/upload');
@@ -99,8 +104,9 @@ var port = app.get('port');
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	app.use('/', nonUsers);
-	app.use('/uploads', auth.ensureAuthenticated, uploads);
+	app.use('/upload', auth.ensureAuthenticated, uploads);
 	app.use('/view', auth.ensureAuthenticated, imageViewer);
+	app.use('/view', express.static(path.join(__dirname, '/public/scripts')));
 	app.use('/', auth.ensureAuthenticated, users);
 	
 /////////////////////////////////////////////////////////////////////////////////////////////////////
