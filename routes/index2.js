@@ -28,6 +28,7 @@ module.exports = function index2(app, passport, hashPassword, db, sendByGmail) {
 	router.get('/register', function(req, res) {
 		res.render('register', { });
 	});
+
 	// Registration post
 	router.post('/register', function(req, res) {
 		console.log("Started: post( /register , function(req, res) { ...");
@@ -40,7 +41,6 @@ module.exports = function index2(app, passport, hashPassword, db, sendByGmail) {
 			if (ex) throw ex;
 			var salt = buf.toString();
 			hash = hashPassword( req.body.password, salt);
-	//		hash = hashPassword(JSON.stringify(req.body.password), salt);
 			var stmt = db.prepare("INSERT INTO users (username, email, password, salt) VALUES ( ? , ? , ? , ? )");
 			stmt.run( req.body.username, req.body.email, hash, salt );
 			stmt.finalize();

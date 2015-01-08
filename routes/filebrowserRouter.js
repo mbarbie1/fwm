@@ -1,82 +1,133 @@
 var express = require('express');
-var router = express.Router();
-var fs = require('fs');
+//var busboy = require('connect-busboy');
 var path = require('path');
-var async = require('async');
-var util = require('util');
-var url = require('url');
-var fb = require('../config/filebrowser.js')();
+var fs = require('fs-extra');
+var router = express.Router();
+//var base = process.env.PWD;
+var base = path.resolve('.');
+var dataCommand = 'data'
+	, downloadCommand = 'download'
+	, uploadCommand = 'upload'
+	, createDirCommand = 'createDir'
+	, deleteCommand = 'delete'
+	, showFileCommand = 'showText'
+	, viewImageCommand = 'view';
+var normalizeUrl = require('normalizeurl');
+var joinURI = function( pathA, pathB ) {
+	return [pathA.replace(/^\/|\/$/g,""), pathB.replace(/^\/|\/$/g,"")].join("/");
+}
+	
+var imageUrl = path.join(dataCommand, 'images/original');
+var uploadImageFolder = path.join( base, imageUrl);
+var uploadDataFolder = path.join( base, dataCommand);
+//
+var fb = require('../middleware/fileBrowser.js')( dataCommand, {'icons': true, 'view': 'details','stylesheet':'./middleware/public/style.css' } );
 
-var urlIconFolder = '/public/images/icons/folder.png';
+// route middleware that will happen on every request: here we log the requests happening
+router.use(function(req, res, next) {
+	console.log('happens on every request: ');
 
-/* GET directory listing. */
+	// log each request to the console
+	console.log(req.method, req.url);
 
-var listCommand = 'list';
-var downloadCommand = 'download';
+	// continue doing what we were doing and go to the route
+	next();	
+});
 
-router.get('/:username*', function(req, res) {
+/* GET home page. */
+//router.get('/', function(req, res) {
+//	console.log('GET /');
+//	res.render('index', { title: 'Express' });
+//});
 
-	var dataDirectory = 'users/public/data';
-	console.log('the request parameters, req.params[0] = ' + req.params[0]);
-	var dirPath = path.join( __dirname, '..', dataDirectory, req.params[0]);
-	console.log('The dirname: ' + __dirname);
-	console.log('The dir requested: ' + req.params[0]);
-	console.log('The dir requested: ' + fb.trimBeginAndEndSlash(req.params[0]));
+/* GET image download file. */
+router.get('/download', function(req, res) {
+	console.log('GET /download');
+	var file = path.join( uploadImageFolder, req.query.file );
+	res.download(file);
+});
 
-	var options = {
-		'name':true,
-		'path':true,
-		'type':true,
-		'url':true,
-		'baseUrl': '/' + fb.trimBeginAndEndSlash(req.params[0]),
-		'listUrl': '/' + listCommand + '/' + req.params.username + '/' + fb.trimBeginAndEndSlash(req.params[0]),
-		'parentUrl': '/' + listCommand + '/' + req.params.username + '/' + fb.parentUrl(req.params[0]),
-		'downloadUrl': '/' + downloadCommand + '/' + dataDirectory + '/' + fb.trimBeginAndEndSlash(req.params[0]),
-		'size':true,
-		'atime':true,
-		'owner':true,
-		'permission': {
-			'user': {'read':true, 'write':true},
-			'group': {'read':true, 'write':false},
-			'all': {'read':false, 'write':false}
-		}
-	};
-	console.log('Base URL: ' + options.baseUrl)
-	console.log('List URL: ' + options.listUrl)
-	console.log('parent URL: ' + options.parentUrl)
-	console.log('download URL: ' + options.downloadUrl)
+/* USE delete file/folder. */
+router.use('/delete', function(req, res, next) {
 
-	fb.listDir(dirPath, options, function(err, list) {
-		if (err) {
-			console.log(err);
-			throw err;
-		}
-		console.log('The list = ' + JSON.stringify(list) );
-		headers = fb.getMrJsonHeaders();
-		folders = [];
-		files = [];
-		fb.loadIconDictionary('../views/users/iconDictionary.json');
-		for (var i = 0; i < list.length; i++) {
-			el = list[i];
-			console.log('The type is ' + el.type)
-			if (el.type == 'folder') {
-				el.img = urlIconFolder;
-				folders.push(el);
-			}
-			if (el.type == 'file') {
-				el.img = fb.mimeTypeIcon( el.mimeType, fb.iconDictionary );
-				files.push(el);
-			}
-		}
-		res.render('users/dataBrowser_node', {
-					user: {'username': req.params.username},
-					'title': 'File Browser', 
-					'folders': JSON.stringify(folders), 
-					'files': JSON.stringify(files), 
-					'headers': JSON.stringify(headers)
+ 	console.log('USE /delete/');
+	console.log('  The url = %j', req.url);
+	
+	var file = path.join( base, dataCommand, req.url );
+	var reqUrl = normalizeUrl(joinURI( joinURI(dataCommand, req.url), '..') );
+	console.log('reqUrl = ' + reqUrl);
+	if ( !fs.lstatSync( file ).isDirectory()  ) {
+		fs.unlink( file, function (err) {
+			if (err) throw err;
+			console.log('Deleted: ', file);
+			res.redirect( reqUrl );
 		});
-	});
+	} else {
+		fs.remove(file, function (err) {
+			if (err) throw err;
+			console.log('Deleted dir: ', file);
+			res.redirect( reqUrl );
+		});
+	}
+});
 
+/* USE image download file. */
+router.use('/data', function(req, res, next) {
+
+ 	console.log('USE /data/');
+	console.log('  The url = %j', req.url);
+	
+	var file = path.join( base, dataCommand, req.url );
+	if ( !fs.lstatSync( file ).isDirectory()  ) {
+		console.log('Downloading: ', file);
+		res.download(file);
+	} else {
+		console.log('Not a file, we cannot download it (serve-index will handle it): ', file);
+		next();
+	}
+});
+
+router.use('/data', function(req, res, next) {
+
+ 	console.log('USE /data/');
+	console.log('  The url = %j', req.url);
+	
+	fb.indexHtml( req, function (err, htmlFb) {
+		if (err) {
+			res.render('error', { 'error': err });
+		} else {
+			// TODO
+			req.session.user = 'mbarbie1';
+			res.render('data', { 'htmlFb': htmlFb, user:{'username':req.session.user} });
+		}
+	});
+});
+
+/* POST file to upload page. */
+router.post('/upload', function(req, res){
+	console.log('POST /upload');
+
+    var fstream;
+    req.busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
+		console.log('file event');
+		console.log('fieldname');
+		console.log(fieldname);
+		console.log('file');
+		console.log(file);
+		console.log('filename');
+		console.log(filename);
+		console.log('encoding');
+		console.log(encoding);
+		console.log('mimetype');
+		console.log(mimetype);
+		fstream = fs.createWriteStream( path.join(uploadImageFolder, filename) );
+		file.pipe(fstream);
+		fstream.on('close', function () {
+			res.redirect('back');
+		});
+    });
+
+    req.pipe(req.busboy);
 });
 
 module.exports = router;
