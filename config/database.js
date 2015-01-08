@@ -48,6 +48,8 @@ module.exports = function database() {
 			db.run( sqlQuery );
 		});
 	};
+
+
 	
 	return module;
 };

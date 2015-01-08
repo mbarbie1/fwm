@@ -1,0 +1,28 @@
+extends layout
+
+block content
+	h1 #{title}
+
+	div#divID
+
+	script(type='text/javascript', src='https://code.jquery.com/jquery-2.1.1.min.js')
+	script(type='text/javascript').
+		var gheaders = !{headers};
+		var gfiles = !{files};
+		var gfolders = !{folders};
+		console.log("Headers: " + JSON.stringify(gheaders));
+		console.log("Files: " + JSON.stringify(gfiles));
+		console.log("Folders: " + JSON.stringify(gfolders));
+	script(type="text/javascript" src="/scripts/myJsonTable.js")
+	
+	form#fileUpload(method="post" action="#{user.username}" enctype="multipart/form-data") 
+	label(for="payload") Select a file to upload:     
+	input#payload(type="file" name="myFile" accept="*") 
+	br 
+	button#upload Upload
+
+	form#createDir(method="post" action="#{user.username}" enctype="multipart/form-data") 
+	label(for="payload") Select a file to upload:     
+	input#payload(type="file" name="myFile" accept="*") 
+	br 
+	button#createDir Upload

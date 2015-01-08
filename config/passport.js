@@ -5,7 +5,7 @@ module.exports = function auth(app,db) {
 	var LocalStrategy = require('passport-local').Strategy;
 	var crypto = require('crypto');
 
-	module = {};
+	var module = {};
 
 	module.passport = passport;
 

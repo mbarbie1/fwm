@@ -51,6 +51,7 @@ app.use( multer( {
 } ) );
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '/public')));
+app.use('/public',express.static(path.join(__dirname, '/public')));
 app.use('/scripts',express.static(path.join(__dirname, '/public/scripts')));
 app.use('/styles',express.static(path.join(__dirname, '/public/styles')));
 app.use(session({ secret: 'timp' }));
@@ -96,6 +97,8 @@ var port = app.get('port');
 
 	var nonUsers = require('./routes/index2')(app, auth.passport, auth.hashPassword, database.db, email.sendByGmail);
 	var uploads = require('./routes/upload');
+	var downloads = require('./routes/download');
+	var filebrowserRouter = require('./routes/filebrowserRouter');
 	var users = require('./routes/users');
 	var imageViewer = require('./routes/imageViewer');
 
@@ -105,6 +108,8 @@ var port = app.get('port');
 
 	app.use('/', nonUsers);
 	app.use('/upload', auth.ensureAuthenticated, uploads);
+	app.use('/download', auth.ensureAuthenticated, downloads);
+	app.use('/list', auth.ensureAuthenticated, filebrowserRouter);
 	app.use('/view', auth.ensureAuthenticated, imageViewer);
 	app.use('/view', express.static(path.join(__dirname, '/public/scripts')));
 	app.use('/', auth.ensureAuthenticated, users);

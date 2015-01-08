@@ -24,6 +24,8 @@
 	"nodemailer": "*",
 	"nodemailer-smtp-transport": "*",
 	"xoauth2": "*",
-	"multer": "*"
+	"multer": "*",
+	"async": "*",
+	"mime": "*"
   }
 }
