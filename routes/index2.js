@@ -41,9 +41,8 @@ module.exports = function index2(app, passport, hashPassword, db, sendByGmail) {
 			if (ex) throw ex;
 			var salt = buf.toString();
 			hash = hashPassword( req.body.password, salt);
-			var stmt = db.prepare("INSERT INTO users (username, email, password, salt) VALUES ( ? , ? , ? , ? )");
-			stmt.run( req.body.username, req.body.email, hash, salt );
-			stmt.finalize();
+			db.run("INSERT INTO users (username, email, password, salt, valid) VALUES ( $username , $email , $password , $salt, $valid )", 
+			{$email:req.body.email, $username:req.body.username, $password:hash, $salt:salt, $valid:true});
 
 			return res.render('registeredUser');
 		});

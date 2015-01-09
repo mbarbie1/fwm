@@ -1,0 +1,21 @@
+/* Essential FileDrop zone element configuration: */
+.fb-table {
+	//width: 25px;
+}
+
+.fb-dropzone {
+	position: relative;
+	overflow: hidden;
+	/* The following are not required but create a pretty box: */
+	margin: 0 auto;
+	text-align: center;
+	color: grey;
+	font-size: 500%;
+	font-family: Verdana;
+	width: 100%;
+	height: 100%;
+	padding: 25px;
+	border: 4px solid grey;
+	moz-border-radius: 10px;
+	border-radius: 10px;
+}

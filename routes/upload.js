@@ -4,7 +4,7 @@ var util = require("util");
 var fs = require("fs"); 
 
 router.get('/:username', function(req, res) { 
-	res.render("users/dataManager_node2", {title: "Data upload", user: {'username': req.params.username}}); 
+	res.render("users/data", {title: "Data upload", user: {'username': req.params.username}}); 
 });
 
 router.post('/:username', function(req, res, next){ 
@@ -15,9 +15,9 @@ router.post('/:username', function(req, res, next){
 		}
 		fs.exists(req.files.myFile.path, function(exists) { 
 			if(exists) { 
-				res.render("users/dataView", {title: "Data transfer succesful", user: {'username': req.params.username}}); 
+				res.render("users/data", {title: "Data transfer succesful", user: {'username': req.params.username}}); 
 			} else { 
-				res.render("users/dataManager_node2", {title: "Data transfer failure, please retry", user: {'username': req.params.username}}); 
+				res.render("users/data", {title: "Data transfer failure, please retry", user: {'username': req.params.username}}); 
 			} 
 		}); 
 	} 
