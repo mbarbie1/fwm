@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+
 var debug = require('debug')('fwm');
 var app = require('../app');
 
