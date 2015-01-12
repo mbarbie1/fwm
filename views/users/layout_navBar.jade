@@ -11,6 +11,9 @@ nav.navbar.navbar-default(role="navigation")
 
 	.collapse.navbar-collapse#main_site_nav
 		ul.nav.navbar-nav
-			include layout_navBarUser
+			li.navbar-left
+				a(href="/data/") Browser
+			li.navbar-left
+				a(href="/view/#{user.username}") Image viewer
 			li.pull-right
 				a(href="/logout") Logout
