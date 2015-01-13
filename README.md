@@ -29,3 +29,6 @@ To do
 	- Basic server-side IIIF image server API implementation in node
 - Connection to MBASE
 
+https://github.com/lovell/sharp
+https://github.com/jcupitt/libvips
+http://www.vips.ecs.soton.ac.uk/supported/current/win32/

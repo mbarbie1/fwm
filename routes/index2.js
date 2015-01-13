@@ -103,7 +103,7 @@ module.exports = function index2(app, passport, hashPassword, db, sendByGmail) {
 					if (row.password == req.query.password) {
 						db.run("UPDATE users SET valid = $valid WHERE email = $email", {$valid:true, $email:req.query.email.toString()});
 						console.log("email registration confirmation SUCCES");
-						return res.redirect('/login');
+						return res.redirect('/login',{ message: 'Registration succesfull, please sign in'});
 					} else {
 						console.log("false email registration confirmation FAILED");
 						return res.redirect('/registerByEmail');
@@ -121,14 +121,18 @@ module.exports = function index2(app, passport, hashPassword, db, sendByGmail) {
 	// Login post
 	router.post('/login', function(req, res, next) {
 		passport.authenticate('local', function(err, user, info) {
-			if (err) { return next(err) }
+			if (err) {
+				console.log('Error: ' + err.message);
+				return res.redirect('/login');
+				//return next(err);
+			}
 			if (!user) {
-				req.flash('error', 'Not a user'); //info.message);
+				//req.flash('error', 'Not a user'); //info.message);
 				console.log("Error, Not a user");
-				return res.redirect('/login')
+				return res.render('login', {message: 'Error: Not a user'});
 			}
 			req.logIn(user, function(err) {
-				req.flash('message', 'LogIn'); //info.message);
+				//req.flash('message', 'LogIn'); //info.message);
 				if (err) { return next(err); }
 				return res.redirect('/users/home/');
 			});

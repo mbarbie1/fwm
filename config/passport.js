@@ -79,7 +79,7 @@ module.exports = function auth(app,db) {
 
 		passport.deserializeUser(function(id, done) {
 			db.get('SELECT id, username FROM users WHERE id = ?', id, function(err, row) {
-				if (!row) return done(null, false);
+				if (!row) return done(err, false);
 				return done(null, row);
 			});
 		});
