@@ -102,9 +102,7 @@ router.use('/data', function(req, res, next) {
 		if (err) {
 			res.render('error', { 'error': err });
 		} else {
-			// TODO
-			req.session.user = 'mbarbie1';
-			res.render('users/data', { 'htmlFb': htmlFb, user:{'username':req.session.user} });
+			res.render('users/data', { 'htmlFb': htmlFb, user:{'username':req.user.username} });
 		}
 	});
 });

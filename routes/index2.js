@@ -115,7 +115,7 @@ module.exports = function index2(app, passport, hashPassword, db, sendByGmail) {
 
 	// Login page
 	router.get('/login', function(req, res) {
-		res.render('login', { user : req.user });
+		res.render('login');
 	});
 
 	// Login post
@@ -130,7 +130,7 @@ module.exports = function index2(app, passport, hashPassword, db, sendByGmail) {
 			req.logIn(user, function(err) {
 				req.flash('message', 'LogIn'); //info.message);
 				if (err) { return next(err); }
-				return res.redirect('/users/home/' + user.username);
+				return res.redirect('/users/home/');
 			});
 		})(req, res, next);
 	});

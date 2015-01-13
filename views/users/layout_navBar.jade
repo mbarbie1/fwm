@@ -6,7 +6,7 @@ nav.navbar.navbar-default(role="navigation")
 			span.icon-bar
 			span.icon-bar
 			span.icon-bar
-		a.navbar-brand(href="/users/home/#{user.username}") 
+		a.navbar-brand(href="/users/home/") 
 			| #{user.username}
 
 	.collapse.navbar-collapse#main_site_nav
@@ -14,6 +14,8 @@ nav.navbar.navbar-default(role="navigation")
 			li.navbar-left
 				a(href="/data/") Browser
 			li.navbar-left
-				a(href="/view/#{user.username}") Image viewer
+				a(href="/box/") Box
+			li.navbar-left
+				a(href="/view/") Image viewer
 			li.pull-right
 				a(href="/logout") Logout

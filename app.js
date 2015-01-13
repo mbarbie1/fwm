@@ -7,8 +7,6 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override')
-// Query strings with recursive depth
-//var qs = require('qs');
 var querystring = require('querystring');
 // Example qs: 
 //				var obj = qs.parse('a=c');    // { a: 'c' }
@@ -16,21 +14,19 @@ var querystring = require('querystring');
 // passport session
 var session = require('express-session');
 var flash = require('connect-flash');
-//var passport = require('passport');
-//var LocalStrategy = require('passport-local').Strategy;
-//var crypto = require('crypto');
-//var xoauth2 = require('xoauth2');
-//// sending emails
-//var nodemailer = require('nodemailer');
-//var smtpTransport = require('nodemailer-smtp-transport');
 
 // File upload
 var multer = require('multer');
 
 var app = express();
 
-
-//var routes = require('./routes/index');
+// CONFIGURATION OF THE EXPRESS APP
+//
+// TODO remove this
+app.set('env','production');
+//process.env.NODE_ENV =
+//
+// development only
 
 // view engine setup
 app.set('port', process.env.PORT || 3000);
@@ -50,17 +46,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //	dest: "./data/"
 //} ) );
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, '/public')));
-app.use('/public',express.static(path.join(__dirname, '/public')));
-app.use('/scripts',express.static(path.join(__dirname, '/public/scripts')));
-app.use('/styles',express.static(path.join(__dirname, '/public/styles')));
 app.use(session({ secret: 'timp' }));
 app.use(flash());
 
 //var host = server.address().address;
 var host = app.get('host');
 var port = app.get('port');
-
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -89,35 +80,32 @@ var port = app.get('port');
 	var auth = require('./config/passport')(app, database.db);
 	auth.initPassport();
 
-	
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////          VIEWS          //////////////////////////////////////////////
+//////////////////////////////         ROUTES           /////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+	// REQUIRED FILES
 	var nonUsers = require('./routes/index2')(app, auth.passport, auth.hashPassword, database.db, email.sendByGmail);
-//	var uploads = require('./routes/upload');
-//	var downloads = require('./routes/download');
 	var filebrowserRouter = require('./routes/filebrowserRouter');
 	var users = require('./routes/users');
 	var imageViewer = require('./routes/imageViewer');
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////         USER VIEWS       /////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////
+	// STATIC ROUTING
+	app.use(express.static(path.join(__dirname, '/public')));
+	app.use('/public',express.static(path.join(__dirname, '/public')));
+	app.use('/scripts',express.static(path.join(__dirname, '/public/scripts')));
+	app.use('/styles',express.static(path.join(__dirname, '/public/styles')));
+	app.use('/view', express.static(path.join(__dirname, '/public/scripts')));
 
+	// ROUTING
 	app.use('/', nonUsers);
-//	app.use('/upload', auth.ensureAuthenticated, uploads);
-//	app.use('/download', auth.ensureAuthenticated, downloads);
 	app.use('/', auth.ensureAuthenticated, filebrowserRouter);
 	app.use('/view', auth.ensureAuthenticated, imageViewer);
-	app.use('/view', express.static(path.join(__dirname, '/public/scripts')));
 	app.use('/', auth.ensureAuthenticated, users);
-	
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////     ERROR HANDLING      //////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 	// catch 404 and forward to error handler
 	app.use(function(req, res, next) {
@@ -131,23 +119,43 @@ var port = app.get('port');
 	// development error handler
 	// will print stacktrace
 	if (app.get('env') === 'development') {
+
 		app.use(function(err, req, res, next) {
 			res.status(err.status || 500);
-			res.render('error', {
-				message: err.message,
-				error: err
-			});
+			if (!req.isAuthenticated()) {
+				res.render('error', {
+					message: 'error.jade: ' + err.message,
+					error: err
+				});
+			} else {
+				res.render('users/error', {
+					message: 'users/error.jade: ' + err.message,
+					error: err,
+					user: { 'username' : req.user }
+				});
+			}
 		});
 	}
 
 	// production error handler
 	// no stacktraces leaked to user
-	app.use(function(err, req, res, next) {
-		res.status(err.status || 500);
-		res.render('error', {
-			message: err.message,
-			error: {}
+	if (app.get('env') === 'production') {
+
+		app.use(function(err, req, res, next) {
+			res.status(err.status || 500);
+				if (!req.isAuthenticated()) {
+					res.render('error', {
+					message: 'error.jade: ' + err.message,
+					error: {}
+				});
+			} else {
+				res.render('users/error', {
+					message: 'users/error.jade: ' + err.message,
+					error: {},
+					user: { 'username' : req.user.toString() }
+				});
+			}
 		});
-	});
+	}
 
 	module.exports = app;

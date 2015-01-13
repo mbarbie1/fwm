@@ -8,7 +8,10 @@ html
 		block styles
 			link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css')
 			link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css')
-			link(rel='stylesheet', href='../../public/styles/userGlobalStyle.css')
+			link(rel='stylesheet', href='/public/styles/userGlobalStyle.css')
+			if styles
+				each style in styles
+					link(rel='stylesheet', href=style)
 
 		block head_scripts
 			script(type='text/javascript', src='https://code.jquery.com/jquery-2.1.1.min.js')

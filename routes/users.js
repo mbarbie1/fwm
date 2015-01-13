@@ -26,9 +26,14 @@ var fs = require("fs");
 });
  */
 /* GET users page */
-router.get('/users/home/:username', function(req, res) {
+router.get('/users/home/', function(req, res) {
 	console.log('Inside: user router');
-	res.render('users/home.jade', { scripts:[], user: { 'username' : req.params.username}, page: {'title':'User profile', 'content':'home' } } );
+	res.render('users/home.jade', { scripts:[], user: { 'username' : req.user.username}, page: {'title':'User profile', 'content':'home' } } );
 });
+
+router.get('/box/', function(req, res) {
+	res.render('users/box.jade', { scripts:[], user: { 'username' : req.user.username}, page: {'title':'User profile', 'content':'home' } } );
+});
+
 
 module.exports = router;
