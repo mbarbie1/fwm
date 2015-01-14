@@ -6,23 +6,34 @@ block content
 	div(id="droptable", class="fb-table").
 		!{htmlFb}
 	br
-	//-
-		div(id="dropzone", class="fb-dropzone").
-			Drop files here
-			<script type='text/javascript' src='https://code.jquery.com/jquery-2.1.1.min.js'></script>
-			<script>
-				addDropZone('dropzone', function(files) { 
-					$.post({ 
-						url: '/upload/',
-						data: files,
-						success: function() {},
-						//dataType: dataType
-					}); 
-				});
-				addDropZone('droptable',function(){  });
-			</script>
-		br
-	form#fileUpload(name='uploadForm', action='/upload', method='post', enctype="multipart/form-data")
-		p
-			input(id='file', type='file', name='file')
+	div(id="dropzone", class="fb-dropzone").
+		Drop files here
+		<script type='text/javascript' src='https://code.jquery.com/jquery-2.1.1.min.js'></script>
+		<script>
+			function uploadFiles(url, files) {
+				var formData = new FormData();
+				for (var i = 0, file; file = files[i]; ++i) {
+					formData.append(file.name, file);
+				}
+				var xhr = new XMLHttpRequest();
+				xhr.open('POST', url, true);
+				xhr.onload = function(e) {};
+				xhr.send(formData);  // multipart/form-data
+			}
+
+			addDropZone('dropzone', function(files) {
+				uploadFiles( '/data/images/original', files);
+				window.location.href = window.location.href;
+			});
+
+			addDropZone('droptable',function(){ 
+				uploadFiles('/data/images/original', files);
+				window.location.href = window.location.href;
+			});
+		</script>
+	br
+	form#fileUpload(name='uploadForm', method='post', enctype="multipart/form-data")
+		div
+			input(id='file', type='file', name='file', multiple='multiple')
+			br
 			input(type='submit', value='Upload')

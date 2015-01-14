@@ -1,6 +1,7 @@
 extends layout
 
 block content
+	p #{message}
 	form( class="form-signin", role="form", action="/login", method="post")
 		h2.form-signin-heading Please log in
 		label(class="sr-only") Username

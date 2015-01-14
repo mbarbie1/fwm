@@ -15,8 +15,6 @@ var querystring = require('querystring');
 var session = require('express-session');
 var flash = require('connect-flash');
 
-// File upload
-var multer = require('multer');
 
 var app = express();
 
@@ -42,6 +40,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 ////////////////////////// We don't want any safety leak: allowing url encoding is one?
 app.use(bodyParser.urlencoded({ extended: true }));
+
 //app.use( multer( {
 //	dest: "./data/"
 //} ) );
@@ -84,11 +83,22 @@ var port = app.get('port');
 //////////////////////////////         ROUTES           /////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
 	// REQUIRED FILES
 	var nonUsers = require('./routes/index2')(app, auth.passport, auth.hashPassword, database.db, email.sendByGmail);
 	var filebrowserRouter = require('./routes/filebrowserRouter');
 	var users = require('./routes/users');
 	var imageViewer = require('./routes/imageViewer');
+
+	// File upload
+	var multer = require('multer');
+	var uploadImageFolder = path.join(__dirname, 'data/images/original');
+	app.use( multer({
+	  dest: uploadImageFolder,
+	  rename: function (fieldname, filename) {
+		return filename.replace(/\W+/g, '-').toLowerCase() + Date.now();
+	  }
+	}))
 
 	// STATIC ROUTING
 	app.use(express.static(path.join(__dirname, '/public')));
@@ -103,6 +113,7 @@ var port = app.get('port');
 	app.use('/view', auth.ensureAuthenticated, imageViewer);
 	app.use('/', auth.ensureAuthenticated, users);
 
+	
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////     ERROR HANDLING      //////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////

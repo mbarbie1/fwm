@@ -107,8 +107,11 @@ router.use('/data', function(req, res, next) {
 	});
 });
 
+
+
+
 /* POST file to upload page. */
-router.post('/upload', busboy(), function(req, res){
+/* router.post('/upload', busboy(), function(req, res){
 	console.log('Inside POST /upload');
 
 	var fstream;
@@ -130,12 +133,12 @@ router.post('/upload', busboy(), function(req, res){
 		console.log(path.join(uploadImageFolder, filename));
 		fstream = fs.createWriteStream( path.join(uploadImageFolder, filename) );
 		file.pipe(fstream);
-		fstream.on('close', function () {
+		fstream.on('finish', function () {
 			res.redirect('back');
 		});
 	});
 });
-
+ */
 /* 	if (req.files) { 
 		console.log(util.inspect(req.files));
 		if (req.files.myFile.size === 0) {

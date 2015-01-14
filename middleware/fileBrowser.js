@@ -327,48 +327,48 @@ module.exports = function filebrowser( root, options ) {
 		  + '<span class="date">Modified</span>'
 		  + '</li>') : '')
 		+ files.map(function(file){
-		var isDir = '..' == file.name || (file.stat && file.stat.isDirectory())
-		  , classes = []
-		  , path = dir.split('/').map(function (c) { return encodeURIComponent(c); });
+			var isDir = '..' == file.name || (file.stat && file.stat.isDirectory())
+			  , classes = []
+			  , path = dir.split('/').map(function (c) { return encodeURIComponent(c); });
 
-		if (useIcons) {
-		  classes.push('icon');
+			if (useIcons) {
+			  classes.push('icon');
 
-		  if (isDir) {
-			classes.push('icon-directory');
-		  } else {
-			var ext = extname(file.name);
-			var icon = iconLookup(file.name);
+			  if (isDir) {
+				classes.push('icon-directory');
+			  } else {
+				var ext = extname(file.name);
+				var icon = iconLookup(file.name);
 
-			classes.push('icon');
-			classes.push('icon-' + ext.substring(1));
+				classes.push('icon');
+				classes.push('icon-' + ext.substring(1));
 
-			if (classes.indexOf(icon.className) === -1) {
-			  classes.push(icon.className);
+				if (classes.indexOf(icon.className) === -1) {
+				  classes.push(icon.className);
+				}
+			  }
 			}
-		  }
-		}
 
-		path.push(encodeURIComponent(file.name));
+			path.push(encodeURIComponent(file.name));
 
-		var date = file.stat && file.name !== '..'
-		  ? file.stat.mtime.toDateString() + ' ' + file.stat.mtime.toLocaleTimeString()
-		  : '';
-		var size = file.stat && !isDir
-		  ? file.stat.size
-		  : '';
+			var date = file.stat && file.name !== '..'
+			  ? file.stat.mtime.toDateString() + ' ' + file.stat.mtime.toLocaleTimeString()
+			  : '';
+			var size = file.stat && !isDir
+			  ? file.stat.size
+			  : '';
 
-		return '<li><a href="'
-		  + normalizeSlashes(normalize(path.join('/')))
-		  + '" class="'
-		  + classes.join(' ') + '"'
-		  + ' title="' + file.name + '">'
-		  + '<span class="name">'+file.name+'</span>'
-		  + '<span class="size">'+size+'</span>'
-		  + '<span class="date">'+date+'</span>'
-		  + '</a></li>';
+			return '<li><a href="'
+			  + normalizeSlashes(normalize(path.join('/')))
+			  + '" class="'
+			  + classes.join(' ') + '"'
+			  + ' title="' + file.name + '">'
+			  + '<span class="name">'+file.name+'</span>'
+			  + '<span class="size">'+size+'</span>'
+			  + '<span class="date">'+date+'</span>'
+			  + '</a></li>';
 
-	  }).join('\n') + '</ul>';
+		}).join('\n') + '</ul>';
 	}
 
 	/**

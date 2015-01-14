@@ -115,7 +115,7 @@ module.exports = function index2(app, passport, hashPassword, db, sendByGmail) {
 
 	// Login page
 	router.get('/login', function(req, res) {
-		res.render('login');
+		res.render('login', { message: req.flash('info') } );
 	});
 
 	// Login post
@@ -123,16 +123,16 @@ module.exports = function index2(app, passport, hashPassword, db, sendByGmail) {
 		passport.authenticate('local', function(err, user, info) {
 			if (err) {
 				console.log('Error: ' + err.message);
+				req.flash('info', 'Error occured during login: ' + err.message + '\nPlease retry');
 				return res.redirect('/login');
 				//return next(err);
 			}
 			if (!user) {
-				//req.flash('error', 'Not a user'); //info.message);
-				console.log("Error, Not a user");
-				return res.render('login', {message: 'Error: Not a user'});
+				console.log("Error, !user");
+				req.flash('info', 'Not a valid user/password combination\nPlease retry');
+				return res.redirect('/login');
 			}
 			req.logIn(user, function(err) {
-				//req.flash('message', 'LogIn'); //info.message);
 				if (err) { return next(err); }
 				return res.redirect('/users/home/');
 			});
@@ -147,7 +147,5 @@ module.exports = function index2(app, passport, hashPassword, db, sendByGmail) {
 		});
 	});
 	
-	//module.exports = router;
-
 	return router;
 }	
